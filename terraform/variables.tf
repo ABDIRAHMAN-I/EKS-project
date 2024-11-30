@@ -7,6 +7,6 @@ variable "ecr_repository_name" {
 variable "s3_bucket_name" {
   description = "name of s3 bucket"
   type        = string
-  default     = "my-tetras-app-statefiles-bucket"
+
 
 }
