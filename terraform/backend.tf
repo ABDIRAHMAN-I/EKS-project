@@ -1,8 +1,9 @@
 terraform {
   backend "s3" {
-    bucket  = "my-tetras-app-statefiles-bucket"
+    bucket  = "tetras-app-statefiles-bucket"
     key     = "state-file"
     region  = "eu-west-2"
+    dynamodb_table = "dydb-state-locking-eks"
     encrypt = true
   }
 }
