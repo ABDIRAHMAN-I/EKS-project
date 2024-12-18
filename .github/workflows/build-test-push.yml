@@ -33,7 +33,7 @@ jobs:
 
     - name: Build Docker image
       run: |
-          docker build -t ${{ github.event.inputs.docker-image-name }} .
+          docker build -t ${{ github.event.inputs.docker-image-name }} ./app
 
     - name: Test Docker image
       run: |
