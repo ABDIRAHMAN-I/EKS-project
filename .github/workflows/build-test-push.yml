@@ -6,7 +6,7 @@ on:
     docker-image-name: # Define the input
       description: 'Name for the Docker image'
       required: true
-      default: 'default-docker-image'
+      default: 'eks-tetras-project'
 
 
 jobs:
