@@ -1,42 +1,16 @@
-module "aws_ecr_repository" {
+module "vpc" {
+  source = "./modules/vpc"
+  vpc_name = "eks-vpc"
+  private_subnet_name = "eks-private-subnet"
+  public_subnet_name = "eks-public-subnet"
+  igw_name = "eks-igw"
+  route_table_name = "eks-rt"
+  sg_name = "eks-sg"
+
+}
+
+
+module "ecr" {
   source              = "./modules/ecr"
   ecr_repository_name = "eks-tetras-project"
 }
-
-
-module "aws_vpc" {
-  source = "./modules/vpc"
-}
-
-
-module "aws_subnet" {
-  source = "./modules/vpc"  
-}
-
-
-module "aws_internet_gateway" {
-  source = "./modules/vpc"
-  
-}
-
-
-module "aws_route_table" {
-  source = "./modules/vpc"
-}
-
-module "aws_route_table_association" {
-  source = "./modules/vpc"
-}
-
-module "aws_eip" {
-  source = "./modules/vpc"
-}
-
-module "aws_nat_gateway" {
-  source = "./modules/vpc"
-}
-
-module "aws_security_group" {
-  source = "./modules/vpc"
-}
-
