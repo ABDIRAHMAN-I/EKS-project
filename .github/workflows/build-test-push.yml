@@ -3,7 +3,7 @@ name: Build, Scan, and Push to ECR
 on:
   workflow_dispatch:  
    inputs:
-    docker-image-name: # Define the input
+    docker-image-name: 
       description: 'Name for the Docker image'
       required: true
       default: 'eks-tetras-project'
