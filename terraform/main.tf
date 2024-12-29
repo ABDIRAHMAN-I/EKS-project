@@ -9,13 +9,6 @@ module "vpc" {
 
 }
 
-
-module "ecr" {
-  source              = "./modules/ecr"
-  ecr_repository_name = "eks-tetras-project"
-}
-
-
 module "eks" {
   source          = "./modules/eks"
   vpc_id          = module.vpc.vpc_id
@@ -25,8 +18,10 @@ module "eks" {
 }
 
 module "irsa" {
-  source = "./modules/irsa"
+  source            = "./modules/irsa"
   oidc_provider_arn = module.eks.oidc_provider_arn
-  
-  
+
+
 }
+
+
