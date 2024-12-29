@@ -24,7 +24,7 @@ resource "aws_subnet" "eks-private-subnet-a" {
 
   # This prevents accidental deletion
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 
   tags = {
@@ -40,7 +40,7 @@ resource "aws_subnet" "eks-private-subnet-b" {
   availability_zone = "eu-west-2b"
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 
   tags = {
@@ -56,7 +56,7 @@ resource "aws_subnet" "eks-private-subnet-c" {
   availability_zone = "eu-west-2c"
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 
   tags = {
@@ -76,7 +76,7 @@ resource "aws_subnet" "eks-public-subnet-a" {
 
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 
 
@@ -95,7 +95,7 @@ resource "aws_subnet" "eks-public-subnet-b" {
 
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 
 
@@ -114,7 +114,7 @@ resource "aws_subnet" "eks-public-subnet-c" {
 
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 
 

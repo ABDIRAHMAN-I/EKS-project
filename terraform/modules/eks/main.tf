@@ -2,7 +2,7 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "20.31.4"
 
-  cluster_name    = local.name
+  cluster_name    = "eks-cluster"
   cluster_version = "1.31"
 
   cluster_endpoint_public_access = true
@@ -20,10 +20,11 @@ module "eks" {
 
   }
 
-
+  
   eks_managed_node_groups = {
     default = {}
   }
 
 
 }
+
