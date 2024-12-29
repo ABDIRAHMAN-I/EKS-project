@@ -16,7 +16,7 @@ spec:
       - name: my-app
         image: 977098994448.dkr.ecr.eu-west-2.amazonaws.com/eks-tetras-project:latest
         ports:
-        - containerPort: 3000
+        - containerPort: 80
 
 
 
