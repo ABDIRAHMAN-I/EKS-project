@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-app
+  name: tetris-deployment
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: my-app
+      app: tetris
   template:
     metadata:
       labels:
-        app: my-app
+        app: tetris
     spec:
       containers:
-      - name: my-app
+      - name: tetris-container
         image: 977098994448.dkr.ecr.eu-west-2.amazonaws.com/eks-tetras-project:latest
         ports:
         - containerPort: 80
