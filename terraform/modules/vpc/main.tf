@@ -28,7 +28,8 @@ resource "aws_subnet" "eks-private-subnet-a" {
   }
 
   tags = {
-    Name = var.private_subnet_name
+    "kubernetes.io/cluster/eks-cluster" = "shared"
+    "kubernetes.io/role/internal-elb"   = 1
   }
 
 }
@@ -44,7 +45,8 @@ resource "aws_subnet" "eks-private-subnet-b" {
   }
 
   tags = {
-    Name = var.private_subnet_name
+    "kubernetes.io/cluster/eks-cluster" = "shared"
+    "kubernetes.io/role/internal-elb"   = 1
   }
 
 }
@@ -60,7 +62,8 @@ resource "aws_subnet" "eks-private-subnet-c" {
   }
 
   tags = {
-    Name = var.private_subnet_name
+    "kubernetes.io/cluster/eks-cluster" = "shared"
+    "kubernetes.io/role/internal-elb"   = 1
   }
 
 }
@@ -81,7 +84,8 @@ resource "aws_subnet" "eks-public-subnet-a" {
 
 
   tags = {
-    Name = var.public_subnet_name
+    "kubernetes.io/cluster/eks-cluster" = "shared"
+    "kubernetes.io/role/internal-elb"   = 1
   }
 
 }
@@ -100,7 +104,8 @@ resource "aws_subnet" "eks-public-subnet-b" {
 
 
   tags = {
-    Name = var.public_subnet_name
+    "kubernetes.io/cluster/eks-cluster" = "shared"
+    "kubernetes.io/role/internal-elb"   = 1
   }
 
 }
@@ -119,7 +124,8 @@ resource "aws_subnet" "eks-public-subnet-c" {
 
 
   tags = {
-    Name = var.public_subnet_name
+    "kubernetes.io/cluster/eks-cluster" = "shared"
+    "kubernetes.io/role/internal-elb"   = 1
   }
 
 }
@@ -192,12 +198,23 @@ resource "aws_route_table_association" "eks-public-rta-c" {
 # EIP used with a NAT Gateway to provide a stable and consistent public IP address
 resource "aws_eip" "eks-eip" {
   domain = "vpc"
+
+  tags = {
+    "kubernetes.io/cluster/eks-cluster" = "shared"
+    "kubernetes.io/role/internal-elb"   = 1
+  }
 }
 
 # NAT Gateway placed in the public subnet because it already has internet access, used to access the internet securely without exposing them.
 resource "aws_nat_gateway" "eks-ng" {
   allocation_id = aws_eip.eks-eip.id
   subnet_id     = aws_subnet.eks-public-subnet-a.id
+
+
+  tags = {
+    "kubernetes.io/cluster/eks-cluster" = "shared"
+    "kubernetes.io/role/internal-elb"   = 1
+  }
 
 }
 
