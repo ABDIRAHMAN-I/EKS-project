@@ -1,34 +1,12 @@
 {
-  "name": "tetris",
+  "name": "app",
   "version": "1.0.0",
-  "description": "The classic Tetris game with pure JS",
-  "private": true,
-  "devDependencies": {
-    "css-loader": "^7.1.2",
-    "html-webpack-plugin": "^4.3.0",
-    "http-server": "^14.1.1",
-    "style-loader": "^1.2.1",
-    "terser-webpack-plugin": "^4.1.0",
-    "webpack": "^5.96.1",
-    "webpack-cli": "^5.1.4"
-  },
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode production",
-    "deploy": "surge --project ./dist/ --domain tetromino.surge.sh",
-    "start": "http-server ./dist"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/larprad/tetris.git"
-  },
-  "keywords": [
-    "tetris"
-  ],
-  "author": "Loïc La Prairie",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/larprad/tetris/issues"
-  },
-  "homepage": "https://github.com/larprad/tetris#readme"
+  "description": ""
 }
