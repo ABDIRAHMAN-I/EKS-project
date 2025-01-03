@@ -28,8 +28,8 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Lint Dockerfile
-      run: docker run --rm -i hadolint/hadolint < ./app/Dockerfile
+    - name: Lint dockerfile
+      run: docker run --rm -i hadolint/hadolint < ./app/dockerfile
 
     - name: Build Docker image
       run: |
