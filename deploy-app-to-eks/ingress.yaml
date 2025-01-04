@@ -1,12 +1,11 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: my-tetris-app-ingress
-  namespace: default 
+  name: app-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-dns-issuer"
 spec:
-  ingressClassName: nginx
   rules:
   - host: eks-project.lab.abdirahman-ismail.com
     http:
@@ -15,6 +14,11 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: tetris-service
+            name: app-service
             port:
               number: 80
+
+  tls:
+  - hosts:
+    - eks-project.lab.abdirahman-ismail.com
+    secretName: wildcard-lab-abdirahman-ismail-com-tls
