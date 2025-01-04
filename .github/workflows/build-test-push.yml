@@ -1,53 +1,62 @@
 name: Build, Scan, and Push to ECR
 
 on:
-  workflow_dispatch:  
-   inputs:
-    docker-image-name: 
-      description: 'Name for the Docker image'
-      required: true
-      default: 'eks-tetras-project'
-
+  workflow_dispatch:
+    inputs:
+      docker-image-name:
+        description: 
+        required: true
+        default: '2048-game'
 
 jobs:
   build-and-scan:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: Log in to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Lint dockerfile
-      run: docker run --rm -i hadolint/hadolint < ./app/dockerfile
+      # 1) Set up Docker Buildx to enable multi-arch builds
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          install: true
 
-    - name: Build Docker image
-      run: |
-          docker build -t ${{ github.event.inputs.docker-image-name }} ./app
+      - name: Lint Dockerfile
+        run: docker run --rm -i hadolint/hadolint < ./app/dockerfile
 
-    - name: Test Docker image
-      run: |
-          docker run -d -p 8080:80 ${{ github.event.inputs.docker-image-name }}
+      # 2) Build a multi-arch image (e.g., amd64 + arm64) and push directly to ECR
+      - name: Build and Push Multi-Arch Docker Image
+        run: |
+          docker buildx build \
+            --platform linux/amd64,linux/arm64 \
+            -t ${{ steps.login-ecr.outputs.registry }}/${{ github.event.inputs.docker-image-name }}:latest \
+            --push ./app
+
+      # 3) (Optional) Test the image if you only need to test one architecture locally (amd64)
+      #    Note: This will pull the amd64 variant automatically on your GitHub Actions runner.
+      - name: Test Docker image
+        run: |
+          docker pull ${{ steps.login-ecr.outputs.registry }}/${{ github.event.inputs.docker-image-name }}:latest
+          docker run -d -p 8080:80 ${{ steps.login-ecr.outputs.registry }}/${{ github.event.inputs.docker-image-name }}:latest
           docker ps | grep ${{ github.event.inputs.docker-image-name }}
 
-    - name: Tag and Push Docker image to ECR
-      run: |
-          docker tag ${{ github.event.inputs.docker-image-name }}:latest ${{ steps.login-ecr.outputs.registry }}/${{ github.event.inputs.docker-image-name }}:latest
-          docker push ${{ steps.login-ecr.outputs.registry }}/${{ github.event.inputs.docker-image-name }}:latest
-
-    - name: Scan Docker Image with Trivy
-      uses: aquasecurity/trivy-action@master
-      with:
-        image-ref: ${{ github.event.inputs.docker-image-name }}:latest
-        format: 'table'
-        severity: 'CRITICAL,HIGH'
+      # 4) Scan Docker Image with Trivy
+      #    Note: This will scan whichever architecture it pulls by default (likely amd64).
+      - name: Scan Docker Image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ steps.login-ecr.outputs.registry }}/${{ github.event.inputs.docker-image-name }}:latest
+          format: 'table'
+          severity: 'CRITICAL,HIGH'
